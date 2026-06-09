@@ -1,6 +1,6 @@
 clear all
 
-cd "~"
+cd "E:\06博士论文\002出国交流\02cliamte_economy\output_ld_new"
 insheet using GDPpc.csv ,clear
 
 *********Make Table 4*************
@@ -54,6 +54,10 @@ reghdfe  dgdp  poor#c.(c.dT c.dT2 c.tem##c.tem c.l.tem##c.l.tem c.dP c.dP2 c.pre
 estimates store r1
 lincom 0.poor#c.l.tem+2*25*0.poor#c.l.tem#c.l.tem
 lincom 1.poor#c.l.tem+2*25*1.poor#c.l.tem#c.l.tem
+
+lincom 0.poor#c.tem+2*25*0.poor#c.tem#c.tem
+lincom 1.poor#c.tem+2*25*1.poor#c.tem#c.tem
+
 matrix results = J(26, 6, .) 
 local index =1
 local vars c.dT c.dT2 c.tem c.tem#c.tem cL.tem cL.tem#cL.tem c.dP c.dP2 c.pre c.pre#c.pre cL.pre cL.pre#cL.pre 
@@ -72,8 +76,10 @@ foreach var of local vars{
 
 xtabond2 dgdp l(1/1).dgdp c.dT c.dT2 c.tem##c.tem c.l.tem##c.l.tem c.dP c.dP2 c.pre##c.pre c.l.pre##c.l.pre poor#c.(c.dT c.dT2 c.tem##c.tem c.l.tem##c.l.tem c.dP c.dP2 c.pre##c.pre c.l.pre##c.l.pre) dpop i.poor#i.year i.subc#c.year  [aweight=weight], iv(c.dT c.dT2 c.tem##c.tem  c.l.tem##c.l.tem c.dP c.dP2 c.pre##c.pre c.l.pre##c.l.pre poor#c.(c.dT c.dT2 c.tem##c.tem c.l.tem##c.l.tem c.dP c.dP2 c.pre##c.pre c.l.pre##c.l.pre) dpop i.poor#i.year i.subc#c.year ) gmm(l(1/1).dgdp, l(3 4)) nolevel cluster(country1) artests(3)
 estimates store r2
-lincom cL.tem +1.poor#cL.tem
-lincom cL.tem#cL.tem +1.poor#cL.tem#cL.tem 
+lincom cL.tem +2*25*cL.tem#cL.tem
+lincom c.l.tem+1.poor#c.l.tem+2*25*(c.l.tem#c.l.tem+1.poor#c.l.tem#c.l.tem)
+lincom c.tem +2*25*c.tem#c.tem
+lincom c.tem+1.poor#c.tem+2*25*(c.tem#c.tem+1.poor#c.tem#c.tem)
 local index =1
 local vars dT dT2 tem c.tem#c.tem cL.tem cL.tem#cL.tem dP dP2 pre c.pre#c.pre cL.pre cL.pre#cL.pre
 foreach var of local vars{

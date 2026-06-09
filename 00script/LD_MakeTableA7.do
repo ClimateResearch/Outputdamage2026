@@ -1,6 +1,6 @@
 clear all
 
-cd "~"
+cd "E:\06博士论文\002出国交流\02cliamte_economy\output_ld_new"
 insheet using GDPpc.csv ,clear
 
 *********Make Table A7*************
@@ -28,10 +28,9 @@ gen P2 = pre*pre
 gen dT2= d.T2
 gen dP2 = d.P2
 
-reghdfe dgdp c.l(1/3).dgdp dT dT2 c.tem##c.tem dP dP2 c.pre##c.pre dpop [aweight=weight],absorb( i.gid_nmbr i.year i.subc#c.year ) cluster(country1)
+reghdfe dgdp c.l(1/3).dgdp dT dT2 c.tem##c.tem dP dP2 c.pre##c.pre dpop [aweight=weight],absorb( i.gid_nmbr i.year i.subc#c.year ) vce( cluster country1)
 estimates store r1
 lincom c.tem+2*25*(c.tem#c.tem)
-
 
 preserve
 keep if kalkuhl==1
